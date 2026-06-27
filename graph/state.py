@@ -1,5 +1,5 @@
 from typing import TypedDict
-from models.schemas import ProjectSignals, ProjectSummary, JDRequirements, MatchReport
+from models.schemas import ProjectSignals, ProjectSummary, JDRequirements, MatchReport, ResumeContent
 
 
 class ProjectState(TypedDict):
@@ -23,3 +23,5 @@ class PipelineState(TypedDict):
     jd_requirements: JDRequirements | None
     report: MatchReport | None
     report_md: str
+    resume_content: ResumeContent | None
+    resume_path: str

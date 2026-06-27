@@ -3,3 +3,5 @@ langchain-google-vertexai
 google-cloud-aiplatform
 pydantic
 python-dotenv
+python-docx
+pyyaml

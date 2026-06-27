@@ -9,6 +9,7 @@ from graph.nodes.gemini_summarizer import gemini_summarizer
 from graph.nodes.jd_parser import jd_parser
 from graph.nodes.matcher import matcher
 from graph.nodes.report_generator import report_generator
+from graph.nodes.resume_generator import resume_generator
 
 log = logging.getLogger(__name__)
 
@@ -54,12 +55,14 @@ def build_pipeline_graph():
     graph.add_node("jd_parser", jd_parser)
     graph.add_node("matcher", matcher)
     graph.add_node("report_generator", report_generator)
+    graph.add_node("resume_generator", resume_generator)
 
     graph.set_entry_point("projects_lister")
     graph.add_edge("projects_lister", "process_all_projects")
     graph.add_edge("process_all_projects", "jd_parser")
     graph.add_edge("jd_parser", "matcher")
     graph.add_edge("matcher", "report_generator")
-    graph.add_edge("report_generator", END)
+    graph.add_edge("report_generator", "resume_generator")
+    graph.add_edge("resume_generator", END)
 
     return graph.compile()

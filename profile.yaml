@@ -1,0 +1,45 @@
+name: Atefe Rajabi
+contact:
+  email: atefe.rajabi.78@gmail.com
+  phone: ""
+  linkedin: linkedin.com/in/atefe-rajabi78
+  github: github.com/itsatefe
+  location: Yerevan, Armenia
+
+background: |
+  Applied AI Engineer specialising in LLM and agentic systems, with a focus on turning data
+  into decisions. Builds procurement and business-intelligence agents on Google ADK, RAG
+  pipelines with source-cited outputs, FastAPI microservices, and end-to-end GCP deployments.
+  MSc in Artificial Intelligence (thesis on causal AI). Comfortable as sole engineer owning a
+  full product lifecycle — from architecture through deployment and monitoring.
+
+experience:
+  - title: Applied AI Engineer
+    company: Mithra-AI Solutions
+    period: "Mar 2026 – Present"
+    bullets:
+      - Architecting and building procurement analytics agents on Google ADK, enabling
+        data-driven sourcing decisions across the full procurement lifecycle.
+      - Designing RAG pipelines with source-cited outputs to surface supplier insights
+        from unstructured documents.
+
+  - title: AI Engineer (Sole Developer)
+    company: ShortPartners
+    period: "2024 – Feb 2026"
+    bullets:
+      - Owned an AI-enabled M&A CRM end-to-end as sole developer, covering the full
+        deal lifecycle from lead ingestion to closing workflow automation.
+      - Reduced manual review effort by ~80% through LLM-powered document analysis,
+        entity extraction, and automated deal-stage classification.
+      - Built and deployed FastAPI services on GCP, integrating PostgreSQL, Langfuse
+        for observability, and Streamlit dashboards for deal-team users.
+
+education:
+  - degree: MSc in Artificial Intelligence
+    institution: Shiraz University
+    year: "2023 – 2025"
+    note: "Thesis: Causal AI"
+
+  - degree: BSc in Software Engineering
+    institution: Persian Gulf University
+    year: "2017 – 2021"

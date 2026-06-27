@@ -33,6 +33,8 @@ def main():
         "jd_requirements": None,
         "report": None,
         "report_md": "",
+        "resume_content": None,
+        "resume_path": "",
     })
 
 

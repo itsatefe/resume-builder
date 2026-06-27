@@ -1,1 +1,46 @@
-place your JD name here
+About the job
+Build the Ecosystem. Govern the Future.
+
+
+
+Temple & Webster is where design meets technology. As Australia’s leading online retailer for furniture and homewares, we aren’t just selling products; we are reimagining how people discover and shop for their homes. We are looking for an Agentic AI Platforms Engineer to serve as the custodian of our autonomous agent ecosystem, ensuring high-impact solutions operate within a unified framework of governance and excellence.
+
+
+The Role
+
+
+
+This is a pivotal position for a technologist who wants to move beyond individual tools and architect the platform that powers them. You will be the primary custodian of our Agent Registry, standardising how business and technical agents are deployed to ensure they share a common "Source of Truth". You’ll define the "Rules of Engagement," manage security configurations, and protect the company from "Agentic Drift" as we scale our AI capabilities.
+
+
+What we’re looking for
+
+
+
+We value creative thinking and a builder’s mindset over a rigid checklist. We’re interested in:
+Platform Curiosity: You don’t just build agents; you think about the infrastructure they live on. You’re interested in how Model Context Protocol (MCP) can connect agents to internal data and tools to erase duplication.
+The "Iterative Architect" Mindset: We move fast. You should be comfortable with rapid experimentation - learning quickly from each deployment and relentlessly refining systems to meet performance benchmarks.
+Communication & Collaboration: You can bridge the gap between complex engineering and business impact. You’ll partner with AI Engineers, Data Scientists, and tech teams to translate "tribal knowledge" into robust agentic logic.
+Technical Depth: You have a background in software, DevOps, or ML engineering. You’re proficient in Python and Terraform, and you have experience deploying and monitoring agentic systems in cloud environments (we love GCP).
+
+
+What you’ll be doing
+
+
+
+Guardian of the Ecosystem: Owning the lifecycle, integrity, and safety of our autonomous agents.
+Standardising Deployment: Managing agent environments using GitOps principles—versioning prompts, instructions, and schemas as production code.
+Maintaining Excellence: Performing BAU maintenance and prototyping aggressively while upholding the security and architectural standards required for enterprise deployment.
+
+
+Why Temple & Webster?
+
+
+
+Real Impact: Join a tight-knit team where your work directly influences the experience of millions of customers.
+Innovation-First Culture: We believe in using the right tool for the job. You'll have the space to experiment with Google, OpenAI, Anthropic and the latest AI frameworks to solve real-world retail problems.
+The T&W Way: Our culture is built on our people. We provide a beautiful workspace in St Peters, hybrid flexibility, catered lunches three days a week, and a genuine focus on wellbeing (including daily mindfulness and birthday leave) amongst many benefits.
+
+
+Ready to architect the future? If you’re a systems-thinker who loves building the infrastructure that makes innovation possible, we’d love to hear from you. Hit 'Apply' to start the conversation.
+

@@ -43,3 +43,25 @@ class MatchReport(BaseModel):
     matched: list[MatchResult]
     unmatched: list[str]
     top_projects: list[str]
+
+
+class ResumeProject(BaseModel):
+    """LLM-generated project entry for the resume."""
+    name: str
+    bullets: list[str]
+
+
+class ResumeExperience(BaseModel):
+    """LLM-refined experience entry for the resume."""
+    title: str
+    company: str
+    period: str
+    bullets: list[str]
+
+
+class ResumeContent(BaseModel):
+    """LLM-generated resume body, tailored to the JD."""
+    summary: str
+    skills: dict[str, list[str]]
+    projects: list[ResumeProject]
+    experience: list[ResumeExperience]
