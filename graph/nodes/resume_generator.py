@@ -1,4 +1,3 @@
-import json
 import logging
 from pathlib import Path
 
@@ -10,7 +9,7 @@ from langchain_google_vertexai import ChatVertexAI
 
 from config import GOOGLE_PROJECT_ID, GOOGLE_LOCATION, GEMINI_MODEL
 from graph.state import PipelineState
-from models.schemas import ResumeContent, ResumeProject, ResumeExperience
+from models.schemas import ResumeContent
 
 log = logging.getLogger(__name__)
 
@@ -25,6 +24,7 @@ def resume_generator(state: PipelineState) -> PipelineState:
     profile = yaml.safe_load(PROFILE_PATH.read_text(encoding="utf-8"))
 
     llm = ChatVertexAI(model=GEMINI_MODEL, project=GOOGLE_PROJECT_ID, location=GOOGLE_LOCATION)
+    llm_structured = llm.with_structured_output(ResumeContent)
 
     report = state["report"]
     jd_req = state["jd_requirements"]
@@ -69,37 +69,13 @@ Top candidate projects:
 Candidate's raw work experience:
 {experience_block}
 
-Generate resume content tailored to this specific JD. Return JSON only:
-{{
-  "summary": str,
-  "skills": {{
-    "Languages": [str],
-    "Frameworks & Libraries": [str],
-    "Tools & Platforms": [str]
-  }},
-  "projects": [
-    {{"name": str, "bullets": [str, str, str]}}
-  ],
-  "experience": [
-    {{"title": str, "company": str, "period": str, "bullets": [str, str, str]}}
-  ]
-}}
-
+Generate resume content tailored to this specific JD.
 summary: 3-4 sentences, third person, highlighting the most relevant experience for this JD.
 skills: only skills that appear in the matched evidence or JD requirements.
 projects: top 3-4 projects only, 3 bullet points each starting with an action verb, using JD keywords where accurate.
 experience: rewrite the bullet points for each role to emphasise what is most relevant to this JD — keep facts accurate, sharpen the language, lead with impact and JD keywords. Preserve title, company, and period exactly."""
 
-    response = llm.invoke(prompt)
-    raw = response.content.strip().removeprefix("```json").removesuffix("```").strip()
-    data = json.loads(raw)
-
-    content = ResumeContent(
-        summary=data["summary"],
-        skills=data["skills"],
-        projects=[ResumeProject(**p) for p in data["projects"]],
-        experience=[ResumeExperience(**e) for e in data["experience"]],
-    )
+    content: ResumeContent = llm_structured.invoke(prompt)
 
     _write_docx(profile, content, OUTPUT_PATH)
 

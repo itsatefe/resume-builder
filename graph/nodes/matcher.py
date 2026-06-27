@@ -1,7 +1,6 @@
-import json
 import logging
 from graph.state import PipelineState
-from models.schemas import MatchReport, MatchResult
+from models.schemas import MatchReport, MatchReportFull
 
 log = logging.getLogger(__name__)
 
@@ -20,6 +19,7 @@ def matcher(state: PipelineState) -> PipelineState:
              len(state["jd_requirements"].tools_and_frameworks),
              len(state["summaries"]))
     llm = ChatVertexAI(model=GEMINI_MODEL, project=GOOGLE_PROJECT_ID, location=GOOGLE_LOCATION)
+    llm_structured = llm.with_structured_output(MatchReportFull)
 
     jd_req = state["jd_requirements"]
     summaries = state["summaries"]
@@ -46,32 +46,21 @@ Candidate Projects:
 For each requirement, identify which projects provide evidence — including semantic matches
 (e.g. "FAISS" satisfies "vector database", "Celery" satisfies "async task queue").
 
-Return JSON only with this exact structure:
-{{
-  "matched": [
-    {{"requirement": str, "matched_projects": [str], "evidence": str}},
-    ...
-  ],
-  "unmatched": [str],
-  "top_projects": [str],
-  "report_md": str
-}}
-
+matched: for each requirement, list matched_projects and a short evidence string.
+unmatched: requirements with no supporting project evidence.
 top_projects: ranked by how many requirements they satisfy.
 report_md: a clean markdown report with a summary section, a matched requirements table
 (columns: Requirement | Projects | Evidence), an unmatched requirements list,
 and a top projects ranking."""
 
-    response = llm.invoke(prompt)
-    raw = response.content.strip().removeprefix("```json").removesuffix("```").strip()
-    data = json.loads(raw)
+    result: MatchReportFull = llm_structured.invoke(prompt)
 
     report = MatchReport(
-        matched=[MatchResult(**m) for m in data["matched"]],
-        unmatched=data["unmatched"],
-        top_projects=data["top_projects"],
+        matched=result.matched,
+        unmatched=result.unmatched,
+        top_projects=result.top_projects,
     )
 
     log.info("              ↳ done | matched=%d  unmatched=%d  top=%s",
              len(report.matched), len(report.unmatched), report.top_projects[:3])
-    return {**state, "report": report, "report_md": data["report_md"]}
+    return {**state, "report": report, "report_md": result.report_md}

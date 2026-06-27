@@ -1,4 +1,3 @@
-import json
 import logging
 from langchain_google_vertexai import ChatVertexAI
 from config import GOOGLE_PROJECT_ID, GOOGLE_LOCATION, GEMINI_MODEL
@@ -15,18 +14,12 @@ def jd_parser(state: PipelineState) -> PipelineState:
     """
     log.info("[3/5] jd_parser | parsing job description (%d chars) ...", len(state["jd_text"]))
     llm = ChatVertexAI(model=GEMINI_MODEL, project=GOOGLE_PROJECT_ID, location=GOOGLE_LOCATION)
+    llm_structured = llm.with_structured_output(JDRequirements)
 
     prompt = f"""Extract the technical requirements from this job description.
 
 Job Description:
 {state["jd_text"]}
-
-Return JSON only:
-{{
-  "hard_skills": [str],
-  "domain_knowledge": [str],
-  "tools_and_frameworks": [str]
-}}
 
 hard_skills: programming languages, core engineering skills (e.g. "Python", "REST API design", "SQL").
 domain_knowledge: subject areas and concepts required (e.g. "RAG", "LLM fine-tuning", "data pipelines").
@@ -34,11 +27,7 @@ tools_and_frameworks: specific libraries, platforms, or tools named (e.g. "FastA
 
 Be specific and concise. Do not include soft skills or non-technical requirements."""
 
-    response = llm.invoke(prompt)
-    raw = response.content.strip().removeprefix("```json").removesuffix("```").strip()
-    data = json.loads(raw)
-
-    reqs = JDRequirements(**data)
+    reqs: JDRequirements = llm_structured.invoke(prompt)
     log.info("              ↳ done | hard_skills=%d  domain=%d  tools=%d",
              len(reqs.hard_skills), len(reqs.domain_knowledge), len(reqs.tools_and_frameworks))
     return {**state, "jd_requirements": reqs}

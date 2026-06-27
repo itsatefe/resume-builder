@@ -45,6 +45,14 @@ class MatchReport(BaseModel):
     top_projects: list[str]
 
 
+class MatchReportFull(BaseModel):
+    """Match report including the rendered markdown summary."""
+    matched: list[MatchResult]
+    unmatched: list[str]
+    top_projects: list[str]
+    report_md: str
+
+
 class ResumeProject(BaseModel):
     """LLM-generated project entry for the resume."""
     name: str

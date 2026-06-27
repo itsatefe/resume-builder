@@ -1,4 +1,3 @@
-import json
 import logging
 from langchain_google_vertexai import ChatVertexAI
 from cache.project_cache import load_cache, save_cache, set_cached_summary
@@ -20,31 +19,20 @@ def gemini_summarizer(state: ProjectState) -> ProjectState:
 
     log.info("[4/5] gemini_summarizer | %-30s calling Gemini ...", state["project_name"])
     llm = ChatVertexAI(model=GEMINI_MODEL, project=GOOGLE_PROJECT_ID, location=GOOGLE_LOCATION)
+    llm_structured = llm.with_structured_output(ProjectSummary)
 
     prompt = f"""You are extracting project capabilities for resume matching.
 Project: {state["project_name"]}
 ---
 {state["compressed_payload"]}
 ---
-Return JSON only:
-{{
-  "name": "{state["project_name"]}",
-  "domain": str,
-  "tech_stack": [str],
-  "patterns": [str],
-  "key_features": [str]
-}}
 domain: one short phrase describing what this project does (e.g. "RAG pipeline", "admin dashboard").
 tech_stack: languages, frameworks, libraries actually used.
 patterns: architectural or design patterns observed (e.g. "REST API", "event-driven", "agent tool use").
 key_features: concrete capabilities built (e.g. "document ingestion", "semantic search", "streaming chat")."""
 
-    response = llm.invoke(prompt)
-    raw = response.content.strip().removeprefix("```json").removesuffix("```").strip()
-    data = json.loads(raw)
-    data["name"] = state["project_name"]
-
-    summary = ProjectSummary(**data)
+    summary: ProjectSummary = llm_structured.invoke(prompt)
+    summary = summary.model_copy(update={"name": state["project_name"]})
 
     cache = load_cache(CACHE_FILE)
     set_cached_summary(cache, state["project_name"], state["content_hash"], summary)
