@@ -9,8 +9,11 @@ WATCHED_FILES = (
 )
 
 
+SKIP_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__", "migrations"}
+
+
 def compute_project_hash(project_path: Path) -> str:
-    """Hash mtimes of README + dependency files + top-level .py files."""
+    """Hash mtimes of README, dependency files, and all .py files (recursive)."""
     h = hashlib.md5()
 
     for name in WATCHED_FILES:
@@ -18,8 +21,9 @@ def compute_project_hash(project_path: Path) -> str:
         if f.exists():
             h.update(f"{name}:{f.stat().st_mtime}".encode())
 
-    for f in sorted(project_path.glob("*.py")):
-        h.update(f"{f.name}:{f.stat().st_mtime}".encode())
+    for f in sorted(project_path.rglob("*.py")):
+        if not any(part in SKIP_DIRS for part in f.parts):
+            h.update(f"{f.relative_to(project_path)}:{f.stat().st_mtime}".encode())
 
     return h.hexdigest()
 

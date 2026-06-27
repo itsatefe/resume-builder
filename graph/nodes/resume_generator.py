@@ -30,24 +30,47 @@ def resume_generator(state: PipelineState) -> PipelineState:
     jd_req = state["jd_requirements"]
     summaries_by_name = {s.name: s for s in state["summaries"]}
 
-    top_projects_block = "\n\n".join(
+    # Build project → company mapping from profile
+    project_to_company: dict[str, str] = {
+        proj: exp["company"]
+        for exp in profile.get("experience", [])
+        for proj in exp.get("projects", [])
+    }
+
+    affiliated = set(project_to_company.keys())
+    standalone_names = [n for n in report.top_projects if n not in affiliated and n in summaries_by_name]
+
+    # Experience block: each role includes its associated project details
+    experience_lines = []
+    for exp in profile.get("experience", []):
+        block = (
+            f"Title: {exp['title']} at {exp['company']} ({exp['period']})\n"
+            + "\n".join(f"  - {b}" for b in exp.get("bullets", []))
+        )
+        exp_projects = [p for p in exp.get("projects", []) if p in summaries_by_name]
+        if exp_projects:
+            block += "\n  Associated projects built during this role:"
+            for pname in exp_projects:
+                s = summaries_by_name[pname]
+                block += (
+                    f"\n    Project '{pname}': {s.domain} | "
+                    f"Tech: {', '.join(s.tech_stack)} | "
+                    f"Features: {', '.join(s.key_features)}"
+                )
+        experience_lines.append(block)
+    experience_block = "\n\n".join(experience_lines)
+
+    standalone_block = "\n\n".join(
         f"Project: {name}\n"
         f"Domain: {summaries_by_name[name].domain}\n"
         f"Tech: {', '.join(summaries_by_name[name].tech_stack)}\n"
         f"Features: {', '.join(summaries_by_name[name].key_features)}"
-        for name in report.top_projects
-        if name in summaries_by_name
+        for name in standalone_names
     )
 
     matched_block = "\n".join(
         f"- {m.requirement}: {m.evidence}"
         for m in report.matched
-    )
-
-    experience_block = "\n\n".join(
-        f"Title: {exp['title']} at {exp['company']} ({exp['period']})\n"
-        + "\n".join(f"  - {b}" for b in exp.get("bullets", []))
-        for exp in profile.get("experience", [])
     )
 
     prompt = f"""You are writing a tailored resume for a software engineer applying for a job.
@@ -63,17 +86,20 @@ Tools & frameworks: {', '.join(jd_req.tools_and_frameworks)}
 Matched evidence from candidate's projects:
 {matched_block}
 
-Top candidate projects:
-{top_projects_block}
-
-Candidate's raw work experience:
+Candidate's work experience (some roles include projects built during that role):
 {experience_block}
+
+Standalone personal projects (not part of any work role):
+{standalone_block if standalone_block else "None"}
 
 Generate resume content tailored to this specific JD.
 summary: 3-4 sentences, third person, highlighting the most relevant experience for this JD.
 skills: only skills that appear in the matched evidence or JD requirements.
-projects: top 3-4 projects only, 3 bullet points each starting with an action verb, using JD keywords where accurate.
-experience: rewrite the bullet points for each role to emphasise what is most relevant to this JD — keep facts accurate, sharpen the language, lead with impact and JD keywords. Preserve title, company, and period exactly."""
+experience: for each role, rewrite bullets to emphasise relevance to this JD. For roles that have associated projects, \
+weave the project achievements into the experience bullets rather than listing them separately. \
+Keep facts accurate, lead with impact and JD keywords. Preserve title, company, and period exactly.
+projects: include only standalone personal projects (not affiliated with any work role), top 3 max, \
+3 bullet points each starting with an action verb."""
 
     content: ResumeContent = llm_structured.invoke(prompt)
 

@@ -34,4 +34,5 @@ def signal_compressor(state: ProjectState) -> ProjectState:
 
     payload = "\n".join(lines)
     log.info("[3/5] signal_compressor | %-30s payload ready (%d chars)", state["project_name"], len(payload))
+    log.debug("[3/5] signal_compressor | %-30s full payload:\n%s", state["project_name"], payload)
     return {**state, "compressed_payload": payload}

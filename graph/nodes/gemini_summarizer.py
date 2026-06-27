@@ -27,8 +27,11 @@ Project: {state["project_name"]}
 {state["compressed_payload"]}
 ---
 domain: one short phrase describing what this project does (e.g. "RAG pipeline", "admin dashboard").
-tech_stack: languages, frameworks, libraries actually used.
-patterns: architectural or design patterns observed (e.g. "REST API", "event-driven", "agent tool use").
+tech_stack: every library, framework, protocol, and tool visible in the imports and dependencies — do not omit anything. \
+Use full names where known (e.g. "mcp" → "Model Context Protocol (MCP)", "tf" files → "Terraform", \
+"fastmcp" → "FastMCP / Model Context Protocol", "anthropic" → "Anthropic SDK"). \
+Include all entries from the Imports and Dependencies lines, even unfamiliar ones.
+patterns: architectural or design patterns observed (e.g. "REST API", "event-driven", "agent tool use", "MCP server").
 key_features: concrete capabilities built (e.g. "document ingestion", "semantic search", "streaming chat")."""
 
     summary: ProjectSummary = llm_structured.invoke(prompt)

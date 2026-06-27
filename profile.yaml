@@ -17,6 +17,8 @@ experience:
   - title: Applied AI Engineer
     company: Mithra-AI Solutions
     period: "Mar 2026 – Present"
+    projects:
+      - cat-ai-proc-agent
     bullets:
       - Architecting and building procurement analytics agents on Google ADK, enabling
         data-driven sourcing decisions across the full procurement lifecycle.
@@ -26,6 +28,8 @@ experience:
   - title: AI Engineer (Sole Developer)
     company: ShortPartners
     period: "2024 – Feb 2026"
+    projects:
+      - Question-Answering-RAG-Chat-Agent
     bullets:
       - Owned an AI-enabled M&A CRM end-to-end as sole developer, covering the full
         deal lifecycle from lead ingestion to closing workflow automation.

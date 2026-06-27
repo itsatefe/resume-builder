@@ -63,6 +63,8 @@ def file_scanner(state: ProjectState) -> ProjectState:
     )
     log.info("              ↳ done | deps=%d  imports=%d  classes=%d  commits=%d",
              len(signals.deps), len(signals.imports_used), len(signals.classes), len(signals.recent_commits))
+    log.debug("              ↳ deps:    %s", signals.deps)
+    log.debug("              ↳ imports: %s", signals.imports_used)
 
     return {
         **state,
