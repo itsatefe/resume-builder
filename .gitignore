@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# PyCharm
+.idea/
+
+# Environment variables
+.env
+.env.*
+
+# Project cache
+cache/*.json
+cache/*.pkl
+.project_cache.json 
+
+# OS
+.DS_Store
+Thumbs.db
