@@ -25,7 +25,7 @@ env/
 cache/*.json
 cache/*.pkl
 .project_cache.json 
-
+report.md
 # OS
 .DS_Store
 Thumbs.db
